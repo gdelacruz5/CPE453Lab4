@@ -1,0 +1,11 @@
+-1: openDisk() on failure to open
+
+-2: readBlock() disk is not open
+
+-3: readBlock() bNum out of bounds (bNum < 0 or bNum >= size of disk)
+
+-4: readBlock(), writeBlock() fseek error
+
+-5: readBlock() fread error
+
+-6: writeBlock() fwrite error

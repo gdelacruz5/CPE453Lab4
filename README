@@ -1,0 +1,57 @@
+Names: Gian Delacruz, Brady Trinh (Afternoon Section)
+
+How Well it Works:
+- We feel that our program satisfies the requirements stated in the program 
+  specifications. With that being said, we also believe that there are things
+  that could be improved with additional features. 
+- The system only allows a user to read file data one byte at a time. It would
+  have been nice to have a function that allowed the user to read the entire
+  file. Also to have a function that returned the size of the file.
+- We did not implement heirarchical directories. This would have been a nice
+  feature.
+
+Additional Functionality:
+- Feature B, Directory listing and renaming:
+   - tfs_rename begins line 1076
+   _ tfs_readdir begins line 1117
+   - "tfs_rename" takes in a valid filedescriptor and changes the filename. 
+   The name of the file is stored in the inode.
+   - "tfs_readdir" goes through the list of inodes and prints out every name.
+- Feature E, Timestamps:
+   - tfs_readFileInfo begins line 1146
+   - writeTime begins line 17 
+   - We used the c "time" function to get the current time. We set creation
+   time AND modification time on "tfs_openFile" (in case they open but do not 
+   write), modification time on "tfs_writeFile", and last accessed time on
+   "tfs_closeFile" and on "tfs_unmount" (on "tfs_unmount" we close all open
+   file descriptors). These are stored as strings in the inode.
+- Feature H, Implement system consistency checks: 
+   - Begins in tfs_mount, line 287 and goes up
+   - This additional feature is implemented in the "tfs_mount" function. It
+   checks the blocks for the correct type and correct metadata (ie the
+   superblock points to free blocks and inodes, inodes point to other inodes,
+   inodes also link file extents, and file extents link to file extents and
+   link to their inode). If there was more time available we would have 
+   implemented additional checks for valid inodes (filename, filesize), 
+   superblock (are the number of blocks correct), and to see if the free data
+   blocks, inodes, and file extents are all mutually exclusive.
+
+Limitations/Bugs:
+- Limited to 20 open file descriptors at a time
+   - We have the file descriptors stored in an array of size 20
+- Maximum disk size of 256 blocks
+   - We store the number of blocks of the disk in the superblock in byte
+- "tfs_openFile" automatically creates and saves an empty file (takes up two
+  blocks)
+   - We think it would have made more sense if a new file was saved only when
+   a call to "tfs_writeFile" was made on an open file but at the point that we 
+   realized this it was too late to restructure our code
+- The number of disks created by a user is limited by the amount of heap
+  memory available.
+  - On a call to "openDisk" we allocate memory on the heap for the disk 
+  metadata (the disk number (int), a file pointer, the size (int), etc.).
+  "closeDisk" simply closes the file pointer but does not free the allocated
+  data, this allows disks to be reopend. Although this is a limitation we 
+  think that it is fair to have since it simulates the memory limitations of 
+  an actual multiple disk system
+
